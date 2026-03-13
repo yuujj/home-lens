@@ -182,4 +182,6 @@ export interface MarketAnalyzeResponse {
   marketDataConfidence: MarketDataConfidence;
   priceTrend: string;
   priceTrendPct?: number;
+  /** 사용자에게 전달할 경고 메시지 목록 (선택) */
+  warnings?: string[];
 }
