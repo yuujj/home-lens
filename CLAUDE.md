@@ -251,7 +251,7 @@ SUPABASE_KEY=            # Supabase anon key (선택)
 BACKEND_URL=             # 프론트에서 백엔드 호출 URL
 CORS_ORIGINS=            # 허용 출처 (쉼표 구분)
 CACHE_TTL_SECONDS=3600   # 시세 캐시 유효시간 (기본 1시간)
-CLAUDE_MODEL=claude-sonnet-4-6  # 사용 Claude 모델
+CLAUDE_MODEL=claude-haiku-4-5-20251001  # 사용 Claude 모델
 ```
 
 ---

@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     CACHE_TTL_SECONDS: int = 3600
 
     # 사용할 Claude 모델 ID
-    CLAUDE_MODEL: str = "claude-sonnet-4-6"
+    CLAUDE_MODEL: str = "claude-haiku-4-5-20251001"
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
