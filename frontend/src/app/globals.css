@@ -1,11 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* Pretendard — 한국어 최적화 고딕체 */
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 /* DM Serif Display — 헤딩용 세리프체 */
 @import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap");
+
+@import "tailwindcss";
 
 @layer base {
   :root {
@@ -54,12 +52,13 @@
   }
 
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
     box-sizing: border-box;
   }
 
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
     font-feature-settings: "kern" 1, "liga" 1;
     -webkit-font-smoothing: antialiased;

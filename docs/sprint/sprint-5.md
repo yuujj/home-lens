@@ -158,7 +158,7 @@ CLAUDE_MODEL=claude-sonnet-4-6
 **배포 확인**
 ```bash
 curl https://{railway-url}/api/health
-# → {"status": "ok", "service": "이 집 괜찮아? API"} ✅
+# → {"status": "ok", "service": "HomeLens API"} ✅
 ```
 
 ### 2-2. Vercel 프론트엔드 배포
@@ -195,7 +195,7 @@ NEXT_PUBLIC_BACKEND_URL=https://{railway-url}
 ### 3-1. `README.md` 작성 (루트)
 
 ```markdown
-# 이 집 괜찮아? 🏠
+# HomeLens 🏠
 
 > AI 기반 전세 안전 진단 서비스 — 전세사기 위험도 · 시세분석 · 정책대출 매칭
 

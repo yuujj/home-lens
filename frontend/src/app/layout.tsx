@@ -9,7 +9,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 
 export const metadata: Metadata = {
-  title: "이 집 괜찮아?",
+  title: "HomeLens",
   description: "AI 기반 전세 안전 진단 서비스",
 };
 

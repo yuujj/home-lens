@@ -19,7 +19,7 @@ export default function Header({ activePath = "/" }: Props) {
         <Link
           href="/"
           className="flex items-center gap-2 text-slate-900 transition-opacity hover:opacity-80"
-          aria-label="이 집 괜찮아? 홈으로 이동"
+          aria-label="HomeLens 홈으로 이동"
         >
           <span
             className="flex h-8 w-8 items-center justify-center rounded-lg"
@@ -32,7 +32,7 @@ export default function Header({ activePath = "/" }: Props) {
             className="text-lg font-semibold tracking-tight"
             style={{ fontFamily: "'DM Serif Display', serif" }}
           >
-            이 집 괜찮아?
+            HomeLens
           </span>
         </Link>
 
