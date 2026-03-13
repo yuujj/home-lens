@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from core.config import settings
 from routers.health import router as health_router
-from routers import address, market
+from routers import address, market, fraud
 
 # FastAPI 앱 생성
 app = FastAPI(
@@ -27,3 +27,4 @@ app.add_middleware(
 app.include_router(health_router, prefix="/api")
 app.include_router(address.router, prefix="/api")
 app.include_router(market.router, prefix="/api")
+app.include_router(fraud.router, prefix="/api")
