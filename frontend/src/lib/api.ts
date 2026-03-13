@@ -9,6 +9,9 @@ import type {
   ApiResponse,
   MarketAnalyzeRequest,
   MarketAnalyzeResponse,
+  RegistryParseResponse,
+  FraudScoreRequest,
+  FraudScoreResponse,
 } from "@/types";
 
 // 백엔드 베이스 URL — 환경변수로 관리
@@ -98,5 +101,41 @@ export async function analyzeMarket(
     throw new Error(result.error ?? "시세 분석에 실패했습니다.");
   }
 
+  return result.data;
+}
+
+// ─── 등기부등본 파싱 ─────────────────────────────────────────────────────────
+
+/** 등기부등본 텍스트 파싱 — POST /api/registry/parse */
+export async function parseRegistry(
+  registryText: string
+): Promise<RegistryParseResponse> {
+  const result = await apiFetch<ApiResponse<RegistryParseResponse>>(
+    "/api/registry/parse",
+    {
+      method: "POST",
+      body: JSON.stringify({ registry_text: registryText }),
+    }
+  );
+  if (!result.success || !result.data)
+    throw new Error(result.error ?? "등기부 파싱 실패");
+  return result.data;
+}
+
+// ─── 전세 사기 위험도 스코어링 ────────────────────────────────────────────────
+
+/** 전세 사기 위험도 스코어링 — POST /api/fraud/score */
+export async function scoreFraud(
+  data: FraudScoreRequest
+): Promise<FraudScoreResponse> {
+  const result = await apiFetch<ApiResponse<FraudScoreResponse>>(
+    "/api/fraud/score",
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    }
+  );
+  if (!result.success || !result.data)
+    throw new Error(result.error ?? "스코어링 실패");
   return result.data;
 }

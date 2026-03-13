@@ -1,0 +1,12 @@
+{
+  "senior_mortgage_amount": 12000,
+  "has_attachment": false,
+  "has_provisional_attachment": false,
+  "has_auction": false,
+  "has_trust": false,
+  "has_lease_registration": false,
+  "has_seizure": false,
+  "has_provisional_registration": false,
+  "owner_acquired_recently": false,
+  "is_corporate_owner": false
+}

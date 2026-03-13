@@ -35,3 +35,10 @@ def mock_juso():
     with open(f"{FIXTURES_DIR}/juso_response.json", encoding="utf-8") as f:
         data = json.load(f)
     return data["results"]["juso"][0]
+
+
+@pytest.fixture
+def mock_claude_response():
+    """Claude API 등기부 파싱 응답 fixture"""
+    with open(f"{FIXTURES_DIR}/claude_registry_response.json", encoding="utf-8") as f:
+        return json.load(f)

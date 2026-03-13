@@ -185,3 +185,61 @@ export interface MarketAnalyzeResponse {
   /** 사용자에게 전달할 경고 메시지 목록 (선택) */
   warnings?: string[];
 }
+
+/** 등기부 파싱 응답 */
+export interface RegistryParseResponse {
+  seniorMortgageAmount: number;
+  hasAttachment: boolean;
+  hasProvisionalAttachment: boolean;
+  hasAuction: boolean;
+  hasTrust: boolean;
+  hasLeaseRegistration: boolean;
+  hasSeizure: boolean;
+  hasProvisionalRegistration: boolean;
+  ownerAcquiredRecently: boolean;
+  isCorporateOwner: boolean;
+}
+
+/** 체크리스트 항목 */
+export interface ChecklistItem {
+  item: string;
+  completed: boolean;
+  priority: "필수" | "권장";
+}
+
+/** 사기 위험도 분석 응답 */
+export interface FraudScoreResponse {
+  fraudScore: number;
+  fraudGrade: FraudGrade;
+  fraudFlags: string[];
+  checklistItems: ChecklistItem[];
+  scoreBreakdown: {
+    jeonsRatioScore: number;
+    mortgageScore: number;
+    keywordScore: number;
+    landlordScore: number;
+  };
+}
+
+/** /api/fraud/score 요청 바디 */
+export interface FraudScoreRequest {
+  property_info: {
+    address: Address;
+    housingType: string;
+    exclusiveAreaM2: number;
+    floor: number | null;
+    builtYear: number | null;
+    listedJeonsePrice: number | null;
+    listedTradePrice: number | null;
+    marketTradePrice: number | null;
+    marketJeonsePrice: number | null;
+    marketDataConfidence: MarketDataConfidence;
+    seniorMortgageAmount: number;
+    hasAttachment: boolean;
+    hasProvisionalAttachment: boolean;
+    hasAuction: boolean;
+    hasTrust: boolean;
+    hasLeaseRegistration: boolean;
+  };
+  registry_text: string;
+}
