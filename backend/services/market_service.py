@@ -14,10 +14,11 @@ def filter_similar_area(items: list[dict], target_m2: float) -> list[dict]:
     high = target_m2 * (1 + AREA_TOLERANCE)
     result = []
     for item in items:
-        if item.get("해제여부") == "Y":
+        # 해제 건 제거 — 새 API: cdealType "O" = 해제
+        if str(item.get("cdealType", "")).strip() == "O":
             continue
         try:
-            area = float(item.get("전용면적", 0))
+            area = float(item.get("excluUseAr", 0))
             if low <= area <= high:
                 result.append(item)
         except (ValueError, TypeError):
@@ -51,7 +52,7 @@ def determine_market_price(items: list[dict], target_m2: float) -> tuple[int | N
     prices = []
     for item in filtered:
         try:
-            price_field = item.get("거래금액") or item.get("보증금액", "0")
+            price_field = item.get("dealAmount") or item.get("deposit", "0")
             prices.append(rtms_client.parse_rtms_price(str(price_field)))
         except (ValueError, TypeError):
             continue

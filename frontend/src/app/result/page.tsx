@@ -19,6 +19,7 @@ import ChecklistPanel from "@/components/ChecklistPanel";
 import UserProfileForm from "@/components/UserProfileForm";
 import LoanResultList from "@/components/LoanResultList";
 import IneligibleLoanList from "@/components/IneligibleLoanList";
+import { Suspense } from "react";
 import { analyzeMarket, scoreFraud, getEligibleLoans } from "@/lib/api";
 import type {
   MarketAnalyzeResponse,
@@ -30,7 +31,16 @@ import type {
 
 type Tab = "market" | "fraud" | "loan";
 
+/** useSearchParams()는 Next.js 15에서 반드시 Suspense 경계 안에서 사용해야 함 */
 export default function ResultPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner message="페이지를 불러오는 중..." />}>
+      <ResultPageContent />
+    </Suspense>
+  );
+}
+
+function ResultPageContent() {
   const params = useSearchParams();
   const [activeTab, setActiveTab] = useState<Tab>("market");
 

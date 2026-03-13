@@ -20,7 +20,7 @@ async def search_address(keyword: str) -> dict | None:
         "resultType": "json",
     }
     try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
+        async with httpx.AsyncClient(timeout=10.0, verify=False) as client:
             resp = await client.get(JUSO_API_URL, params=params)
             resp.raise_for_status()
             data = resp.json()

@@ -1,31 +1,32 @@
-"""국토부 RTMS 실거래가 API 클라이언트 — 2025년 공공데이터포털 기준"""
+"""국토부 RTMS 실거래가 API 클라이언트 — 2026년 apis.data.go.kr 기준"""
 
 import httpx
 from core.config import settings
 
-BASE_URL = "http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc"
+BASE_URL = "https://apis.data.go.kr/1613000"
 
-# housing_type → (매매 서비스명, 전세 서비스명)
+# housing_type → (매매 서비스 경로, 전세 서비스 경로)
 SERVICE_MAP = {
-    "apt":  ("getRTMSDataSvcAptTradeDev",  "getRTMSDataSvcAptRent"),
-    "rh":   ("getRTMSDataSvcRHTradeDev",   "getRTMSDataSvcRHRent"),
-    "sh":   ("getRTMSDataSvcSHTradeDev",   None),
-    "offi": ("getRTMSDataSvcOffiTradeDev", None),
+    "apt":  ("RTMSDataSvcAptTradeDev/getRTMSDataSvcAptTradeDev",  "RTMSDataSvcAptRent/getRTMSDataSvcAptRent"),
+    "rh":   ("RTMSDataSvcRHTrade/getRTMSDataSvcRHTrade",          "RTMSDataSvcRHRent/getRTMSDataSvcRHRent"),
+    "sh":   ("RTMSDataSvcSHTrade/getRTMSDataSvcSHTrade",          None),
+    "offi": ("RTMSDataSvcOffiTrade/getRTMSDataSvcOffiTrade",      None),
 }
 
 
-async def _fetch_rtms(service_name: str, lawd_cd: str, deal_ymd: str) -> list[dict]:
-    """RTMS API 공통 호출"""
+async def _fetch_rtms(service_path: str, lawd_cd: str, deal_ymd: str) -> list[dict]:
+    """RTMS API 공통 호출 — apis.data.go.kr JSON 응답"""
     params = {
         "serviceKey": settings.DATA_GO_KR_API_KEY,
         "LAWD_CD": lawd_cd,
         "DEAL_YMD": deal_ymd,
         "numOfRows": 100,
         "pageNo": 1,
+        "_type": "json",
     }
-    url = f"{BASE_URL}/{service_name}"
+    url = f"{BASE_URL}/{service_path}"
     try:
-        async with httpx.AsyncClient(timeout=15.0) as client:
+        async with httpx.AsyncClient(timeout=15.0, verify=False) as client:
             resp = await client.get(url, params=params)
             resp.raise_for_status()
             data = resp.json()
