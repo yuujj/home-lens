@@ -333,10 +333,13 @@ main        ← 배포 브랜치 (보호)
 
 ### 로컬 개발 시작
 ```bash
-# 백엔드
+# 백엔드 — 반드시 프로젝트 가상환경 안에서 실행
 cd backend
+python -m venv .venv                    # 최초 1회만
+source .venv/bin/activate               # macOS/Linux
+# .venv\Scripts\activate               # Windows
 pip install -r requirements.txt
-cp .env.example .env  # API 키 입력
+cp .env.example .env                    # API 키 입력
 uvicorn main:app --reload
 
 # 프론트엔드
