@@ -391,3 +391,4 @@ npm run dev
 | `docs/domain-research-market-analysis.md` | RTMS API 스펙, 시세 추정 로직 |
 | `docs/domain-research.md` | 전세 사기 스코어링 로직, 위험도 판정 기준 |
 | `docs/sprint/` | Sprint별 진행 기록 |
+| `docs/design-system.md` | 색상 토큰, 컴포넌트 패턴, 등급 시스템 UI 가이드 |
