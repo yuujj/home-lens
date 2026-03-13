@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Pretendard — 한국어 최적화 고딕체 */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+/* DM Serif Display — 헤딩용 세리프체 */
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap");
+
+@layer base {
+  :root {
+    /* 브랜드 색상 — 신뢰(네이비) + 경고(앰버) */
+    --color-navy-950: #0a1628;
+    --color-navy-900: #0f2044;
+    --color-navy-800: #1a3260;
+    --color-navy-700: #1e3a7a;
+    --color-navy-600: #2547a1;
+    --color-navy-100: #dce8ff;
+    --color-navy-50:  #f0f5ff;
+
+    --color-amber-500: #f59e0b;
+    --color-amber-400: #fbbf24;
+    --color-amber-100: #fef3c7;
+    --color-amber-50:  #fffbeb;
+
+    /* 등급 색상 — 색맹 대응을 위해 채도 차이 명확히 */
+    --color-grade-safe:    #16a34a; /* 안전 — 초록 */
+    --color-grade-good:    #2563eb; /* 양호 — 파랑 */
+    --color-grade-caution: #d97706; /* 주의 — 주황 */
+    --color-grade-danger:  #dc2626; /* 위험 — 빨강 */
+    --color-grade-critical:#7f1d1d; /* 매우 위험 — 진한 빨강 */
+
+    /* shadcn/ui CSS 변수 */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: "kern" 1, "liga" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3 {
+    font-family: "DM Serif Display", "Pretendard", serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  /* 등급 배지 유틸리티 */
+  .grade-safe     { color: var(--color-grade-safe); }
+  .grade-good     { color: var(--color-grade-good); }
+  .grade-caution  { color: var(--color-grade-caution); }
+  .grade-danger   { color: var(--color-grade-danger); }
+  .grade-critical { color: var(--color-grade-critical); }
+}
