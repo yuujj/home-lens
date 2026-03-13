@@ -9,7 +9,7 @@ from routers import address, market, fraud
 
 # FastAPI 앱 생성
 app = FastAPI(
-    title="이 집 괜찮아? API",
+    title="HomeLens API",
     description="전세 사기 위험도 분석 및 대출 상품 추천 서비스",
     version="0.1.0",
 )

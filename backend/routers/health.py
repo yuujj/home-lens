@@ -8,4 +8,4 @@ router = APIRouter()
 @router.get("/health")
 async def health_check():
     """서비스 헬스체크 엔드포인트."""
-    return {"status": "ok", "service": "이 집 괜찮아? API"}
+    return {"status": "ok", "service": "HomeLens API"}

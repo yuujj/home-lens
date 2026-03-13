@@ -60,7 +60,7 @@ export default function HomePage() {
           className="text-4xl font-normal leading-tight text-slate-900 sm:text-5xl"
           style={{ fontFamily: "'DM Serif Display', serif" }}
         >
-          이 집 괜찮아?
+          HomeLens
         </h1>
         <p className="max-w-md text-base leading-relaxed text-slate-500">
           주소 하나로 전세 사기 위험도, 시세 적정성, 정책 대출 자격을

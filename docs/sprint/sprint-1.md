@@ -91,7 +91,7 @@ testpaths = ["tests"]
 - FastAPI 앱 생성
 - CORSMiddleware — origins은 `settings.cors_origins_list`
 - `router.include_router(health.router, prefix="/api")`
-- 앱 title: `"이 집 괜찮아? API"`
+- 앱 title: `"HomeLens API"`
 
 #### `core/config.py`
 ```python
@@ -139,7 +139,7 @@ settings = Settings()
 ```python
 @router.get("/health")
 async def health_check():
-    return {"status": "ok", "service": "이 집 괜찮아? API"}
+    return {"status": "ok", "service": "HomeLens API"}
 ```
 
 #### `.env.example`
@@ -269,7 +269,7 @@ export async function analyzeMarket(data: MarketAnalyzeRequest): Promise<MarketA
 ```
 
 #### `src/components/Header.tsx`
-- 서비스명 "이 집 괜찮아?" + 로고
+- 서비스명 "HomeLens" + 로고
 - `interface Props {}` 명시
 
 #### `src/components/DisclaimerBanner.tsx`
