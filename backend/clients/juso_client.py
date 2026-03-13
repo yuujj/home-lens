@@ -24,9 +24,11 @@ async def search_address(keyword: str) -> dict | None:
             resp = await client.get(JUSO_API_URL, params=params)
             resp.raise_for_status()
             data = resp.json()
-            results = data.get("results", {}).get("juso", [])
+            print(f"[juso] raw response: {data}")  # 디버그 — 확인 후 제거
+            results = data.get("results", {}).get("juso") or []
             return results[0] if results else None
-    except Exception:
+    except Exception as e:
+        print(f"[juso] error: {e}")  # 디버그 — 확인 후 제거
         return None
 
 
