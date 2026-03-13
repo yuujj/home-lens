@@ -171,6 +171,17 @@ export interface MarketAnalyzeRequest {
   listedJeonsePrice: number;
 }
 
+/** Phase D: 최근 실거래 내역 단건 */
+export interface RecentTrade {
+  aptNm: string;
+  excluUseAr: number;
+  /** 거래금액 (만원) */
+  dealAmount: number;
+  floor: string;
+  /** YYYY-MM-DD */
+  dealDate: string;
+}
+
 /**
  * 시세 분석 응답 — /api/market/analyze 응답 데이터
  */
@@ -184,6 +195,8 @@ export interface MarketAnalyzeResponse {
   priceTrendPct?: number;
   /** 사용자에게 전달할 경고 메시지 목록 (선택) */
   warnings?: string[];
+  /** Phase D: 유사 면적 최근 거래 10건 */
+  recentTrades?: RecentTrade[];
 }
 
 /** 등기부 파싱 응답 */
@@ -250,6 +263,8 @@ export interface FraudScoreResponse {
     keywordScore: number;
     landlordScore: number;
   };
+  /** Phase C: 대출 탭 연동용 선순위 근저당 금액 (만원) */
+  seniorMortgageAmount?: number;
 }
 
 /** /api/fraud/score 요청 바디 */

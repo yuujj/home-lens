@@ -149,4 +149,6 @@ async def calculate_fraud_score(property_info: PropertyInfo, registry_data: dict
             "keyword_score": keyword_score,
             "landlord_score": landlord_score,
         },
+        # Phase C: 대출 탭 연동용 선순위 근저당 금액 전달
+        "senior_mortgage_amount": registry_data.get("senior_mortgage_amount", 0),
     }

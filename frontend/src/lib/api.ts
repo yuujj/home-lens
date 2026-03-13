@@ -29,13 +29,20 @@ const BACKEND_URL =
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const url = `${BACKEND_URL}${path}`;
 
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+    });
+  } catch {
+    throw new Error(
+      "서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요."
+    );
+  }
 
   if (!response.ok) {
     // 서버가 ApiResponse 형태의 에러를 반환하는 경우 메시지 추출
@@ -51,6 +58,34 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
     throw new Error(errorMessage);
   }
 
+  return response.json() as Promise<T>;
+}
+
+// ─── FormData 전용 fetch 래퍼 (Content-Type 자동 설정) ──────────────────────
+
+/**
+ * multipart/form-data 요청용 래퍼 — Content-Type은 브라우저가 자동 설정
+ */
+async function apiFetchForm<T>(path: string, body: FormData): Promise<T> {
+  const url = `${BACKEND_URL}${path}`;
+  let response: Response;
+  try {
+    response = await fetch(url, { method: "POST", body });
+  } catch {
+    throw new Error(
+      "서버 연결에 실패했습니다. 백엔드 서버가 실행 중인지 확인해주세요."
+    );
+  }
+  if (!response.ok) {
+    let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+    try {
+      const errorBody = (await response.json()) as ApiResponse<unknown>;
+      if (errorBody.error) errorMessage = errorBody.error;
+    } catch {
+      // JSON 파싱 실패 시 기본 메시지 사용
+    }
+    throw new Error(errorMessage);
+  }
   return response.json() as Promise<T>;
 }
 
@@ -103,6 +138,23 @@ export async function analyzeMarket(
     throw new Error(result.error ?? "시세 분석에 실패했습니다.");
   }
 
+  return result.data;
+}
+
+// ─── 등기부등본 PDF 업로드 ────────────────────────────────────────────────────
+
+/** PDF 파일 업로드 → 텍스트 추출 — POST /api/registry/upload-pdf */
+export async function uploadRegistryPdf(
+  file: File
+): Promise<{ text: string }> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const result = await apiFetchForm<ApiResponse<{ text: string }>>(
+    "/api/registry/upload-pdf",
+    formData
+  );
+  if (!result.success || !result.data)
+    throw new Error(result.error ?? "PDF 텍스트 추출 실패");
   return result.data;
 }
 
