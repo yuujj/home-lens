@@ -25,11 +25,11 @@ async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const url = `${BACKEND_URL}${path}`;
 
   const response = await fetch(url, {
+    ...options,
     headers: {
       "Content-Type": "application/json",
       ...options?.headers,
     },
-    ...options,
   });
 
   if (!response.ok) {

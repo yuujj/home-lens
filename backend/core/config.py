@@ -6,10 +6,10 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """환경변수로부터 로드되는 애플리케이션 설정."""
 
-    # 외부 API 키
-    ANTHROPIC_API_KEY: str = ""
-    DATA_GO_KR_API_KEY: str = ""
-    JUSO_API_KEY: str = ""
+    # 외부 API 키 (필수 — 없으면 서버 시작 불가)
+    ANTHROPIC_API_KEY: str
+    DATA_GO_KR_API_KEY: str
+    JUSO_API_KEY: str
     RONE_API_KEY: str = ""
     ECOS_API_KEY: str = ""
     FSS_API_KEY: str = ""

@@ -39,15 +39,9 @@ export default function HomePage() {
    * 폼 제출 처리 — Sprint 2에서 실제 API 연동 구현 예정
    * 현재는 입력값 수신 확인 및 로딩 상태 시뮬레이션
    */
-  function handleSubmit(data: AddressInputData) {
+  function handleSubmit(_data: AddressInputData) {
     setIsLoading(true);
-    // Sprint 2: analyzeMarket(data) 호출 후 결과 페이지로 이동
-    // 현재는 콘솔 로그로 확인 (개인정보 미포함 필드만 출력)
-    console.log("진단 요청:", {
-      housingType: data.housingType,
-      exclusiveAreaM2: data.exclusiveAreaM2,
-    });
-    // 실제 API 연동 전 임시 딜레이
+    // Sprint 2: analyzeMarket(_data) 호출 후 결과 페이지로 이동
     setTimeout(() => setIsLoading(false), 1000);
   }
 

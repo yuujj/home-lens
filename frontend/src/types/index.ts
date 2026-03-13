@@ -9,10 +9,10 @@
 export type HousingType = "apt" | "rh" | "sh" | "offi";
 
 /** 전세가율 기반 5단계 등급 */
-export type JeonseGrade = "안전" | "양호" | "주의" | "위험" | "매우 위험";
+export type JeonseGrade = "안전" | "양호" | "주의" | "위험" | "매우 위험" | "데이터 부족";
 
 /** 전세 사기 위험도 4단계 등급 */
-export type FraudGrade = "안전" | "주의" | "위험" | "매우 위험";
+export type FraudGrade = "안전" | "주의" | "위험" | "매우 위험" | "분석 전";
 
 /** 규제지역 구분 */
 export type RegulationZone = "투기지역" | "투기과열" | "조정" | "일반";
@@ -115,6 +115,8 @@ export interface LoanResult {
   /** 우대금리 적용 예상 금리 (%) */
   rateWithBenefit: number;
   ltv: number;
+  /** 월 상환액 추정 (만원) — Sprint 4에서 추가 */
+  monthlyPaymentEstimate?: number;
   notes: string[];
 }
 
