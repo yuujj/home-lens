@@ -3,16 +3,16 @@
     "body": {
       "items": {
         "item": [
-          { "거래금액": " 85,000", "전용면적": "84.99", "해제여부": "", "년": "2025", "월": "1", "일": "15" },
-          { "거래금액": " 87,000", "전용면적": "84.99", "해제여부": "", "년": "2025", "월": "2", "일": "10" },
-          { "거래금액": " 83,000", "전용면적": "84.99", "해제여부": "", "년": "2025", "월": "3", "일": "5" },
-          { "거래금액": " 88,000", "전용면적": "84.99", "해제여부": "", "년": "2025", "월": "1", "일": "22" },
-          { "거래금액": " 86,000", "전용면적": "84.99", "해제여부": "", "년": "2025", "월": "2", "일": "18" },
-          { "거래금액": " 84,000", "전용면적": "84.99", "해제여부": "Y",  "년": "2025", "월": "1", "일": "8"  },
-          { "거래금액": " 89,000", "전용면적": "84.99", "해제여부": "", "년": "2025", "월": "3", "일": "20" },
-          { "거래금액": " 82,000", "전용면적": "59.99", "해제여부": "", "년": "2025", "월": "1", "일": "11" },
-          { "거래금액": " 90,000", "전용면적": "84.99", "해제여부": "", "년": "2025", "월": "2", "일": "25" },
-          { "거래금액": " 85,500", "전용면적": "84.99", "해제여부": "", "년": "2025", "월": "3", "일": "12" }
+          { "dealAmount": " 85,000", "excluUseAr": "84.99", "cdealType": "", "dealYear": "2025", "dealMonth": "1", "dealDay": "15", "aptNm": "역삼아이파크", "floor": "5" },
+          { "dealAmount": " 87,000", "excluUseAr": "84.99", "cdealType": "", "dealYear": "2025", "dealMonth": "2", "dealDay": "10", "aptNm": "역삼아이파크", "floor": "7" },
+          { "dealAmount": " 83,000", "excluUseAr": "84.99", "cdealType": "", "dealYear": "2025", "dealMonth": "3", "dealDay": "5", "aptNm": "역삼아이파크", "floor": "3" },
+          { "dealAmount": " 88,000", "excluUseAr": "84.99", "cdealType": "", "dealYear": "2025", "dealMonth": "1", "dealDay": "22", "aptNm": "역삼아이파크", "floor": "10" },
+          { "dealAmount": " 86,000", "excluUseAr": "84.99", "cdealType": "", "dealYear": "2025", "dealMonth": "2", "dealDay": "18", "aptNm": "역삼아이파크", "floor": "6" },
+          { "dealAmount": " 84,000", "excluUseAr": "84.99", "cdealType": "O",  "dealYear": "2025", "dealMonth": "1", "dealDay": "8",  "aptNm": "역삼아이파크", "floor": "4" },
+          { "dealAmount": " 89,000", "excluUseAr": "84.99", "cdealType": "", "dealYear": "2025", "dealMonth": "3", "dealDay": "20", "aptNm": "역삼아이파크", "floor": "8" },
+          { "dealAmount": " 82,000", "excluUseAr": "59.99", "cdealType": "", "dealYear": "2025", "dealMonth": "1", "dealDay": "11", "aptNm": "역삼아이파크", "floor": "2" },
+          { "dealAmount": " 90,000", "excluUseAr": "84.99", "cdealType": "", "dealYear": "2025", "dealMonth": "2", "dealDay": "25", "aptNm": "역삼아이파크", "floor": "9" },
+          { "dealAmount": " 85,500", "excluUseAr": "84.99", "cdealType": "", "dealYear": "2025", "dealMonth": "3", "dealDay": "12", "aptNm": "역삼아이파크", "floor": "5" }
         ]
       },
       "totalCount": 10
