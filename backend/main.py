@@ -14,10 +14,12 @@ app = FastAPI(
     version="0.1.0",
 )
 
-# CORS 미들웨어 등록 — 허용 오리진은 환경변수에서 읽음
+# CORS 미들웨어 등록 — 환경변수 + 프로덕션 오리진 합산
+_PROD_ORIGINS = ["https://home-lens.vercel.app"]
+_cors_origins = list({*settings.cors_origins_list, *_PROD_ORIGINS})
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
