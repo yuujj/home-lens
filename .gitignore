@@ -26,6 +26,9 @@ out/
 .vscode/
 *.swp
 
+# OMC 내부 상태 (커밋 불필요)
+.omc/
+
 # OS
 .DS_Store
 Thumbs.db
