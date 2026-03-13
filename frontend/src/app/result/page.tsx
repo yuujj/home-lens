@@ -1,6 +1,6 @@
 /**
- * ResultPage — 시세 분석 + 사기 위험도 탭 결과 페이지
- * 탭1: 시세 분석 (Sprint 2), 탭2: 사기 위험도 (Sprint 3)
+ * ResultPage — 시세 분석 + 사기 위험도 + 정책 대출 탭 결과 페이지
+ * 탭1: 시세 분석 (Sprint 2), 탭2: 사기 위험도 (Sprint 3), 탭3: 정책 대출 (Sprint 4)
  * DisclaimerBanner는 모든 상태(로딩/에러/성공)에서 항상 하단에 표시
  */
 
@@ -16,14 +16,19 @@ import RegistryTextInput from "@/components/RegistryTextInput";
 import FraudScoreGauge from "@/components/FraudScoreGauge";
 import FraudFlagList from "@/components/FraudFlagList";
 import ChecklistPanel from "@/components/ChecklistPanel";
-import { analyzeMarket, scoreFraud } from "@/lib/api";
+import UserProfileForm from "@/components/UserProfileForm";
+import LoanResultList from "@/components/LoanResultList";
+import IneligibleLoanList from "@/components/IneligibleLoanList";
+import { analyzeMarket, scoreFraud, getEligibleLoans } from "@/lib/api";
 import type {
   MarketAnalyzeResponse,
   FraudScoreResponse,
   FraudGrade,
+  LoanEligibleResponse,
+  UserProfileInput,
 } from "@/types";
 
-type Tab = "market" | "fraud";
+type Tab = "market" | "fraud" | "loan";
 
 export default function ResultPage() {
   const params = useSearchParams();
@@ -38,6 +43,11 @@ export default function ResultPage() {
   const [fraudData, setFraudData] = useState<FraudScoreResponse | null>(null);
   const [fraudError, setFraudError] = useState<string | null>(null);
   const [isFraudLoading, setIsFraudLoading] = useState(false);
+
+  // ── 탭3: 정책 대출 상태 ───────────────────────────────────────────────────
+  const [loanData, setLoanData] = useState<LoanEligibleResponse | null>(null);
+  const [loanError, setLoanError] = useState<string | null>(null);
+  const [isLoanLoading, setIsLoanLoading] = useState(false);
 
   // 쿼리 파라미터 파싱
   const address = params.get("address") ?? "";
@@ -108,6 +118,33 @@ export default function ResultPage() {
       .finally(() => setIsFraudLoading(false));
   }
 
+  // 탭3 정책 대출 — 프로필 폼 제출 시 실행
+  function handleLoanSubmit(profile: UserProfileInput) {
+    setIsLoanLoading(true);
+    setLoanError(null);
+    setLoanData(null);
+
+    getEligibleLoans({
+      user_profile: profile,
+      property_info: {
+        address,
+        housingType,
+        exclusiveAreaM2,
+        listedJeonsePrice: listedJeonsePrice || null,
+        marketTradePrice: marketData?.marketTradePrice ?? null,
+        marketJeonsePrice: marketData?.marketJeonsePrice ?? null,
+        marketDataConfidence: marketData?.marketDataConfidence ?? "none",
+      },
+    })
+      .then(setLoanData)
+      .catch((err: unknown) =>
+        setLoanError(
+          err instanceof Error ? err.message : "정책 대출 조회에 실패했습니다."
+        )
+      )
+      .finally(() => setIsLoanLoading(false));
+  }
+
   // 탭2 초기 게이지용 기본값
   const initialGrade: FraudGrade = "분석 전";
 
@@ -117,26 +154,25 @@ export default function ResultPage() {
 
       {/* 탭 네비게이션 */}
       <div className="flex border-b border-slate-200">
-        <button
-          className={`px-5 py-2.5 text-sm font-semibold transition-colors ${
-            activeTab === "market"
-              ? "border-b-2 border-blue-700 text-blue-700"
-              : "text-slate-500 hover:text-slate-700"
-          }`}
-          onClick={() => setActiveTab("market")}
-        >
-          시세 분석
-        </button>
-        <button
-          className={`px-5 py-2.5 text-sm font-semibold transition-colors ${
-            activeTab === "fraud"
-              ? "border-b-2 border-blue-700 text-blue-700"
-              : "text-slate-500 hover:text-slate-700"
-          }`}
-          onClick={() => setActiveTab("fraud")}
-        >
-          사기 위험도
-        </button>
+        {(
+          [
+            { key: "market" as const, label: "시세 분석" },
+            { key: "fraud" as const, label: "사기 위험도" },
+            { key: "loan" as const, label: "정책 대출" },
+          ] as const
+        ).map(({ key, label }) => (
+          <button
+            key={key}
+            className={`px-5 py-2.5 text-sm font-semibold transition-colors ${
+              activeTab === key
+                ? "border-b-2 border-blue-700 text-blue-700"
+                : "text-slate-500 hover:text-slate-700"
+            }`}
+            onClick={() => setActiveTab(key)}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* 탭1: 시세 분석 */}
@@ -206,6 +242,27 @@ export default function ResultPage() {
             !isFraudLoading && (
               <FraudScoreGauge score={0} grade={initialGrade} />
             )
+          )}
+        </div>
+      )}
+
+      {/* 탭3: 정책 대출 */}
+      {activeTab === "loan" && (
+        <div className="flex flex-col gap-4">
+          <UserProfileForm onSubmit={handleLoanSubmit} isLoading={isLoanLoading} />
+          {isLoanLoading && (
+            <LoadingSpinner message="정책 대출 자격을 확인하는 중..." />
+          )}
+          {loanError && (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              {loanError}
+            </div>
+          )}
+          {loanData && (
+            <>
+              <LoanResultList loans={loanData.eligible} />
+              <IneligibleLoanList loans={loanData.ineligible} />
+            </>
           )}
         </div>
       )}
