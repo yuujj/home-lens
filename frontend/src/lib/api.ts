@@ -91,7 +91,7 @@ export async function analyzeMarket(
     {
       method: "POST",
       body: JSON.stringify({
-        address: data.address,
+        raw_address: data.address,
         housing_type: data.housingType,
         exclusive_area_m2: data.exclusiveAreaM2,
         listed_jeonse_price: data.listedJeonsePrice,
