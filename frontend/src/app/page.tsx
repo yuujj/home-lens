@@ -6,6 +6,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ShieldCheck, BarChart2, Landmark } from "lucide-react";
 import AddressInput from "@/components/AddressInput";
 import type { AddressInputData } from "@/types";
@@ -34,15 +35,21 @@ const FEATURES = [
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   /**
-   * 폼 제출 처리 — Sprint 2에서 실제 API 연동 구현 예정
-   * 현재는 입력값 수신 확인 및 로딩 상태 시뮬레이션
+   * 폼 제출 처리 — 결과 페이지로 쿼리 파라미터와 함께 이동
+   * 실제 API 호출은 /result 페이지에서 수행
    */
-  function handleSubmit(_data: AddressInputData) {
+  function handleSubmit(data: AddressInputData) {
     setIsLoading(true);
-    // Sprint 2: analyzeMarket(_data) 호출 후 결과 페이지로 이동
-    setTimeout(() => setIsLoading(false), 1000);
+    const params = new URLSearchParams({
+      address: data.address,
+      housingType: data.housingType,
+      exclusiveAreaM2: String(data.exclusiveAreaM2),
+      listedJeonsePrice: String(data.listedJeonsePrice),
+    });
+    router.push(`/result?${params.toString()}`);
   }
 
   return (
