@@ -200,6 +200,37 @@ export interface RegistryParseResponse {
   isCorporateOwner: boolean;
 }
 
+/** 자격 미충족 대출 상품 */
+export interface IneligibleLoan {
+  productName: string;
+  reason: string;
+}
+
+/** /api/loan/eligible 응답 */
+export interface LoanEligibleResponse {
+  eligible: LoanResult[];
+  ineligible: IneligibleLoan[];
+}
+
+/** 사용자 프로필 입력 폼 데이터 */
+export interface UserProfileInput {
+  annualIncome: number;
+  isDualIncome: boolean;
+  netAsset: number;
+  age: number;
+  isMarried: boolean;
+  marriageYears: number;
+  numChildren: number;
+  hasNewborn2yr: boolean;
+  housingOwnership: HousingOwnership;
+  isDisabled: boolean;
+  isSingleParent: boolean;
+  isMulticultural: boolean;
+  subscriptionYears: number;
+  subscriptionCount: number;
+  loanPurpose: LoanPurpose;
+}
+
 /** 체크리스트 항목 */
 export interface ChecklistItem {
   item: string;
