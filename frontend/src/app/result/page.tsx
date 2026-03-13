@@ -1,6 +1,6 @@
 /**
- * ResultPage — 시세 분석 결과 페이지
- * 쿼리 파라미터로 매물 정보를 수신하여 analyzeMarket() 호출 후 결과 표시
+ * ResultPage — 시세 분석 + 사기 위험도 탭 결과 페이지
+ * 탭1: 시세 분석 (Sprint 2), 탭2: 사기 위험도 (Sprint 3)
  * DisclaimerBanner는 모든 상태(로딩/에러/성공)에서 항상 하단에 표시
  */
 
@@ -12,77 +12,200 @@ import JeonseRatioGauge from "@/components/JeonseRatioGauge";
 import MarketPriceCard from "@/components/MarketPriceCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
-import { analyzeMarket } from "@/lib/api";
-import type { MarketAnalyzeResponse } from "@/types";
+import RegistryTextInput from "@/components/RegistryTextInput";
+import FraudScoreGauge from "@/components/FraudScoreGauge";
+import FraudFlagList from "@/components/FraudFlagList";
+import ChecklistPanel from "@/components/ChecklistPanel";
+import { analyzeMarket, scoreFraud } from "@/lib/api";
+import type {
+  MarketAnalyzeResponse,
+  FraudScoreResponse,
+  FraudGrade,
+} from "@/types";
+
+type Tab = "market" | "fraud";
 
 export default function ResultPage() {
   const params = useSearchParams();
-  const [data, setData] = useState<MarketAnalyzeResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<Tab>("market");
 
+  // ── 탭1: 시세 분석 상태 ────────────────────────────────────────────────────
+  const [marketData, setMarketData] = useState<MarketAnalyzeResponse | null>(null);
+  const [marketError, setMarketError] = useState<string | null>(null);
+  const [isMarketLoading, setIsMarketLoading] = useState(true);
+
+  // ── 탭2: 사기 위험도 상태 ─────────────────────────────────────────────────
+  const [fraudData, setFraudData] = useState<FraudScoreResponse | null>(null);
+  const [fraudError, setFraudError] = useState<string | null>(null);
+  const [isFraudLoading, setIsFraudLoading] = useState(false);
+
+  // 쿼리 파라미터 파싱
+  const address = params.get("address") ?? "";
+  const housingType = (params.get("housingType") ?? "apt") as
+    | "apt"
+    | "rh"
+    | "sh"
+    | "offi";
+  const exclusiveAreaM2 = parseFloat(params.get("exclusiveAreaM2") ?? "0");
+  const listedJeonsePrice = parseInt(params.get("listedJeonsePrice") ?? "0", 10);
+
+  // 탭1 시세 분석 — 페이지 마운트 시 자동 실행
   useEffect(() => {
-    const address = params.get("address") ?? "";
-    const housingType = (params.get("housingType") ?? "apt") as
-      | "apt"
-      | "rh"
-      | "sh"
-      | "offi";
-    const exclusiveAreaM2 = parseFloat(params.get("exclusiveAreaM2") ?? "0");
-    const listedJeonsePrice = parseInt(
-      params.get("listedJeonsePrice") ?? "0",
-      10
-    );
-
     analyzeMarket({ address, housingType, exclusiveAreaM2, listedJeonsePrice })
-      .then(setData)
+      .then(setMarketData)
       .catch((err: unknown) =>
-        setError(
+        setMarketError(
           err instanceof Error ? err.message : "분석에 실패했습니다."
         )
       )
-      .finally(() => setIsLoading(false));
-  }, [params]);
+      .finally(() => setIsMarketLoading(false));
+  }, [params]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const listedJeonsePrice = parseInt(
-    params.get("listedJeonsePrice") ?? "0",
-    10
-  );
+  // 탭2 사기 위험도 — 등기부 텍스트 제출 시 실행
+  function handleRegistrySubmit(registryText: string) {
+    setIsFraudLoading(true);
+    setFraudError(null);
+    setFraudData(null);
+
+    scoreFraud({
+      property_info: {
+        address: {
+          rawInput: address,
+          roadAddr: address,
+          jibunAddr: "",
+          lawdCd5: "",
+          lawdCd10: "",
+          sido: "",
+          sigungu: "",
+          dong: "",
+          isMetropolitan: false,
+          regulationZone: "일반",
+        },
+        housingType,
+        exclusiveAreaM2,
+        floor: null,
+        builtYear: null,
+        listedJeonsePrice: listedJeonsePrice || null,
+        listedTradePrice: null,
+        marketTradePrice: marketData?.marketTradePrice ?? null,
+        marketJeonsePrice: marketData?.marketJeonsePrice ?? null,
+        marketDataConfidence: marketData?.marketDataConfidence ?? "none",
+        seniorMortgageAmount: 0,
+        hasAttachment: false,
+        hasProvisionalAttachment: false,
+        hasAuction: false,
+        hasTrust: false,
+        hasLeaseRegistration: false,
+      },
+      registry_text: registryText,
+    })
+      .then(setFraudData)
+      .catch((err: unknown) =>
+        setFraudError(
+          err instanceof Error ? err.message : "사기 위험도 분석에 실패했습니다."
+        )
+      )
+      .finally(() => setIsFraudLoading(false));
+  }
+
+  // 탭2 초기 게이지용 기본값
+  const initialGrade: FraudGrade = "분석 전";
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-bold text-slate-900">시세 분석 결과</h1>
+      <h1 className="text-2xl font-bold text-slate-900">분석 결과</h1>
 
-      {isLoading && (
-        <LoadingSpinner message="시세 데이터를 조회하는 중..." />
-      )}
+      {/* 탭 네비게이션 */}
+      <div className="flex border-b border-slate-200">
+        <button
+          className={`px-5 py-2.5 text-sm font-semibold transition-colors ${
+            activeTab === "market"
+              ? "border-b-2 border-blue-700 text-blue-700"
+              : "text-slate-500 hover:text-slate-700"
+          }`}
+          onClick={() => setActiveTab("market")}
+        >
+          시세 분석
+        </button>
+        <button
+          className={`px-5 py-2.5 text-sm font-semibold transition-colors ${
+            activeTab === "fraud"
+              ? "border-b-2 border-blue-700 text-blue-700"
+              : "text-slate-500 hover:text-slate-700"
+          }`}
+          onClick={() => setActiveTab("fraud")}
+        >
+          사기 위험도
+        </button>
+      </div>
 
-      {error && (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-          {error}
+      {/* 탭1: 시세 분석 */}
+      {activeTab === "market" && (
+        <div className="flex flex-col gap-4">
+          {isMarketLoading && (
+            <LoadingSpinner message="시세 데이터를 조회하는 중..." />
+          )}
+          {marketError && (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              {marketError}
+            </div>
+          )}
+          {marketData && (
+            <>
+              <JeonseRatioGauge
+                ratio={marketData.jeonseRatio ?? null}
+                grade={marketData.jeonseGrade}
+              />
+              <MarketPriceCard
+                marketTradePrice={marketData.marketTradePrice ?? null}
+                marketJeonsePrice={marketData.marketJeonsePrice ?? null}
+                listedJeonsePrice={listedJeonsePrice}
+                confidence={marketData.marketDataConfidence}
+              />
+              {marketData.warnings && marketData.warnings.length > 0 && (
+                <ul className="flex flex-col gap-1 rounded-lg bg-yellow-50 p-3">
+                  {marketData.warnings.map((w) => (
+                    <li key={w} className="text-xs text-yellow-800">
+                      &#9888; {w}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
         </div>
       )}
 
-      {data && (
+      {/* 탭2: 사기 위험도 */}
+      {activeTab === "fraud" && (
         <div className="flex flex-col gap-4">
-          <JeonseRatioGauge
-            ratio={data.jeonseRatio ?? null}
-            grade={data.jeonseGrade}
+          <RegistryTextInput
+            onSubmit={handleRegistrySubmit}
+            isLoading={isFraudLoading}
           />
-          <MarketPriceCard
-            marketTradePrice={data.marketTradePrice ?? null}
-            marketJeonsePrice={data.marketJeonsePrice ?? null}
-            listedJeonsePrice={listedJeonsePrice}
-            confidence={data.marketDataConfidence}
-          />
-          {data.warnings && data.warnings.length > 0 && (
-            <ul className="flex flex-col gap-1 rounded-lg bg-yellow-50 p-3">
-              {data.warnings.map((w) => (
-                <li key={w} className="text-xs text-yellow-800">
-                  ⚠ {w}
-                </li>
-              ))}
-            </ul>
+          {isFraudLoading && (
+            <LoadingSpinner message="등기부를 AI로 분석하는 중..." />
+          )}
+          {fraudError && (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+              {fraudError}
+            </div>
+          )}
+          {fraudData ? (
+            <>
+              <FraudScoreGauge
+                score={fraudData.fraudScore}
+                grade={fraudData.fraudGrade}
+              />
+              <FraudFlagList flags={fraudData.fraudFlags} />
+              {fraudData.checklistItems.length > 0 && (
+                <ChecklistPanel items={fraudData.checklistItems} />
+              )}
+            </>
+          ) : (
+            !isFraudLoading && (
+              <FraudScoreGauge score={0} grade={initialGrade} />
+            )
           )}
         </div>
       )}
