@@ -12,6 +12,8 @@ import type {
   RegistryParseResponse,
   FraudScoreRequest,
   FraudScoreResponse,
+  LoanEligibleResponse,
+  UserProfileInput,
 } from "@/types";
 
 // 백엔드 베이스 URL — 환경변수로 관리
@@ -137,5 +139,27 @@ export async function scoreFraud(
   );
   if (!result.success || !result.data)
     throw new Error(result.error ?? "스코어링 실패");
+  return result.data;
+}
+
+// ─── 정책 대출 자격 조회 ──────────────────────────────────────────────────────
+
+/**
+ * 정책 대출 자격 판단 + 한도/금리 계산
+ * 엔드포인트: POST /api/loan/eligible
+ */
+export async function getEligibleLoans(data: {
+  user_profile: UserProfileInput;
+  property_info: Record<string, unknown>;
+}): Promise<LoanEligibleResponse> {
+  const result = await apiFetch<ApiResponse<LoanEligibleResponse>>(
+    "/api/loan/eligible",
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    }
+  );
+  if (!result.success || !result.data)
+    throw new Error(result.error ?? "대출 조회 실패");
   return result.data;
 }
