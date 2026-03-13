@@ -2,7 +2,8 @@
 # [정책 기준일] 2025년 국토교통부 고시 기준 — 금리·조건 변동 가능
 # 최신 기준: nhuf.molit.go.kr
 """
-from models.schemas import UserProfile, PropertyInfo
+
+from models.schemas import PropertyInfo, UserProfile
 
 # 정책 대출 상품 테이블 (하드코딩 — 외부 API 불필요)
 PRODUCTS = {

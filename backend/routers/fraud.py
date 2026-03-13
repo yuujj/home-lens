@@ -2,10 +2,10 @@
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from pydantic import BaseModel
 
-from services import registry_service, fraud_service
-from services.pdf_service import MAX_PDF_SIZE, extract_text_from_pdf
-from models.schemas import PropertyInfo, ApiResponse
 from core.utils import camelize
+from models.schemas import ApiResponse, PropertyInfo
+from services import fraud_service, registry_service
+from services.pdf_service import MAX_PDF_SIZE, extract_text_from_pdf
 
 router = APIRouter()
 

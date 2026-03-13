@@ -6,7 +6,7 @@
 
 ## 서비스 URL
 - **프론트엔드**: https://home-lens.vercel.app
-- **API 문서**: https://{railway-url}/docs
+- **API 문서**: https://home-lens-api.up.railway.app/docs
 
 ## 핵심 기능
 
@@ -77,7 +77,7 @@ npm run dev
 | AI | Claude claude-haiku-4-5 (등기부 분석) |
 | 배포 | Vercel (프론트) · Railway (백엔드) |
 | CI | GitHub Actions (lint + test on PR) |
-| 테스트 | pytest 17개 (백엔드) |
+| 테스트 | pytest 23개 (백엔드) · Vitest 3개 (프론트) |
 
 ## 테스트 실행
 

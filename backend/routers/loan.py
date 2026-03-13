@@ -2,8 +2,8 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
+from models.schemas import ApiResponse, PropertyInfo, UserProfile
 from services import loan_service
-from models.schemas import UserProfile, PropertyInfo, ApiResponse
 
 router = APIRouter()
 

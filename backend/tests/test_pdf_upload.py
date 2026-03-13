@@ -1,22 +1,22 @@
 """PDF 업로드 엔드포인트 + 텍스트 추출 테스트"""
 
 import io
+
 import pytest
 from fastapi.testclient import TestClient
-
 
 # ─── pdf_service 단위 테스트 ──────────────────────────────────────────────────
 
 def test_extract_text_imports():
     """pdf_service 임포트 가능 여부 확인"""
-    from services.pdf_service import extract_text_from_pdf, MAX_PDF_SIZE
+    from services.pdf_service import MAX_PDF_SIZE
     assert MAX_PDF_SIZE == 10 * 1024 * 1024
 
 
 def test_extract_text_from_valid_pdf():
     """유효한 PDF 바이트 → 텍스트 추출 성공"""
     try:
-        import fitz
+        import fitz  # noqa: F401
     except ImportError:
         pytest.skip("PyMuPDF not installed")
 
@@ -36,7 +36,7 @@ def test_extract_text_from_valid_pdf():
 def test_extract_text_from_corrupt_pdf():
     """손상된 PDF 바이트 → 예외 발생"""
     try:
-        import fitz
+        import fitz  # noqa: F401
     except ImportError:
         pytest.skip("PyMuPDF not installed")
 
@@ -78,7 +78,7 @@ def test_upload_pdf_rejects_oversized(client: TestClient):
 def test_upload_pdf_valid(client: TestClient):
     """유효한 PDF → 200 + text 필드 반환"""
     try:
-        import fitz
+        import fitz  # noqa: F401
     except ImportError:
         pytest.skip("PyMuPDF not installed")
 

@@ -1,6 +1,7 @@
 """시세 분석 서비스 — RTMS 실거래가 기반 전세가율 계산"""
 
 from datetime import date
+
 from clients import rtms_client
 from core.cache import cache
 from models.schemas import Address

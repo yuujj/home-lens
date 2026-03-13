@@ -4,8 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from core.config import settings
+from routers import address, analyze, fraud, loan, market
 from routers.health import router as health_router
-from routers import address, market, fraud, loan, analyze
 
 # FastAPI 앱 생성
 app = FastAPI(
