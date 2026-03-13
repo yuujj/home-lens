@@ -5,8 +5,8 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from clients import juso_client
-from services import market_service, registry_service, fraud_service, loan_service
-from models.schemas import Address, PropertyInfo, UserProfile, ApiResponse
+from models.schemas import Address, ApiResponse, PropertyInfo, UserProfile
+from services import fraud_service, loan_service, market_service, registry_service
 
 router = APIRouter()
 

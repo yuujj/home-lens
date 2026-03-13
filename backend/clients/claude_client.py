@@ -2,17 +2,24 @@
 # [API 기준] anthropic SDK, claude-sonnet-4-6 모델, tool_use 방식
 """
 import anthropic
+
 from core.config import settings
 
 _client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
 
 REGISTRY_PARSE_TOOL = {
     "name": "parse_registry",
-    "description": "등기부등본 텍스트에서 전세 사기 관련 위험 정보를 구조화하여 추출한다. AI 해석은 참고용이며 전문가 확인이 필요합니다.",
+    "description": (
+        "등기부등본 텍스트에서 전세 사기 관련 위험 정보를 구조화하여 추출한다. "
+        "AI 해석은 참고용이며 전문가 확인이 필요합니다."
+    ),
     "input_schema": {
         "type": "object",
         "properties": {
-            "senior_mortgage_amount": {"type": "integer", "description": "선순위 근저당 채권최고액 합계 (만원). 없으면 0"},
+            "senior_mortgage_amount": {
+                "type": "integer",
+                "description": "선순위 근저당 채권최고액 합계 (만원). 없으면 0",
+            },
             "has_attachment": {"type": "boolean", "description": "가압류 존재 여부"},
             "has_provisional_attachment": {"type": "boolean", "description": "가처분 존재 여부"},
             "has_auction": {"type": "boolean", "description": "경매개시결정 여부"},

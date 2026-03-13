@@ -3,7 +3,6 @@
 # 총점 0~100, 높을수록 위험
 """
 from models.schemas import PropertyInfo
-from services import registry_service
 
 
 def calc_jeonse_ratio_score(jeonse_ratio: float) -> int:
@@ -90,7 +89,7 @@ def generate_checklist(registry_data: dict, fraud_score: int) -> list[dict]:
         {"item": "등기부등본 계약 당일 재확인 (잔금 전)", "completed": False, "priority": "필수"},
     ]
     if registry_data.get("has_trust"):
-        items.insert(0, {"item": "신탁원부 열람 + 신탁회사 임대 동의서 원본 확보", "completed": False, "priority": "필수"})
+        items.insert(0, {"item": "신탁원부 열람 + 신탁회사 임대 동의서 원본 확보", "completed": False, "priority": "필수"})  # noqa: E501
     if registry_data.get("has_auction") or fraud_score >= 70:
         items.insert(0, {"item": "전문 법무사/변호사 상담 강력 권장", "completed": False, "priority": "필수"})
     if registry_data.get("is_corporate_owner"):
@@ -149,4 +148,6 @@ async def calculate_fraud_score(property_info: PropertyInfo, registry_data: dict
             "keyword_score": keyword_score,
             "landlord_score": landlord_score,
         },
+        # Phase C: 대출 탭 연동용 선순위 근저당 금액 전달
+        "senior_mortgage_amount": registry_data.get("senior_mortgage_amount", 0),
     }

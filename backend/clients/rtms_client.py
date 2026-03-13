@@ -1,6 +1,7 @@
 """국토부 RTMS 실거래가 API 클라이언트 — 2026년 apis.data.go.kr 기준"""
 
 import httpx
+
 from core.config import settings
 
 BASE_URL = "https://apis.data.go.kr/1613000"

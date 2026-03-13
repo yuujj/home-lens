@@ -1,15 +1,14 @@
 """정책 대출 자격 판단 단위 테스트"""
 import pytest
+
+from models.schemas import Address, PropertyInfo, UserProfile
 from services.loan_service import (
-    calc_monthly_payment,
+    PRODUCTS,
     calc_loan_limit,
-    calc_base_rate,
+    calc_monthly_payment,
     check_eligibility,
     get_eligible_loans,
-    PRODUCTS,
 )
-from models.schemas import UserProfile, PropertyInfo, Address
-
 
 # ─── 공통 fixture ─────────────────────────────────────────────────────────────
 
@@ -98,8 +97,8 @@ async def test_get_eligible_loans_youth(mock_property):
         subscription_years=3, subscription_count=36, loan_purpose="jeonse",
     )
     result = await get_eligible_loans(user, mock_property)
-    product_names = [l["product_name"] for l in result["eligible"]]
+    product_names = [loan["product_name"] for loan in result["eligible"]]
     assert "청년전용 버팀목전세대출" in product_names
     # 한도 검증: MIN(18000 × 0.8 = 14400, 20000) = 14400
-    youth = next(l for l in result["eligible"] if l["product_name"] == "청년전용 버팀목전세대출")
+    youth = next(loan for loan in result["eligible"] if loan["product_name"] == "청년전용 버팀목전세대출")
     assert youth["max_limit"] == 14400

@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
 import type { UserProfileInput, LoanPurpose, HousingOwnership } from "@/types";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 interface Props {
   onSubmit: (profile: UserProfileInput) => void;
@@ -26,9 +26,9 @@ const DEFAULT: UserProfileInput = {
 };
 
 export default function UserProfileForm({ onSubmit, isLoading }: Props) {
-  const [form, setForm] = useState<UserProfileInput>(DEFAULT);
+  const [form, setForm] = useLocalStorage<UserProfileInput>("homelens:profile", DEFAULT);
   const set = <K extends keyof UserProfileInput>(k: K, v: UserProfileInput[K]) =>
-    setForm((f) => ({ ...f, [k]: v }));
+    setForm({ ...form, [k]: v });
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">

@@ -19,6 +19,8 @@ import ChecklistPanel from "@/components/ChecklistPanel";
 import UserProfileForm from "@/components/UserProfileForm";
 import LoanResultList from "@/components/LoanResultList";
 import IneligibleLoanList from "@/components/IneligibleLoanList";
+import RecentTradesTable from "@/components/RecentTradesTable";
+import PropertyMap from "@/components/PropertyMap";
 import { Suspense } from "react";
 import { analyzeMarket, scoreFraud, getEligibleLoans } from "@/lib/api";
 import type {
@@ -137,13 +139,15 @@ function ResultPageContent() {
     getEligibleLoans({
       user_profile: profile,
       property_info: {
-        address,
         housingType,
         exclusiveAreaM2,
         listedJeonsePrice: listedJeonsePrice || null,
+        listedTradePrice: marketData?.marketTradePrice ?? null,
         marketTradePrice: marketData?.marketTradePrice ?? null,
         marketJeonsePrice: marketData?.marketJeonsePrice ?? null,
         marketDataConfidence: marketData?.marketDataConfidence ?? "none",
+        // Phase C: 사기 위험도 탭에서 파싱된 선순위 근저당 금액 연동
+        seniorMortgageAmount: fraudData?.seniorMortgageAmount ?? 0,
       },
     })
       .then(setLoanData)
@@ -178,7 +182,13 @@ function ResultPageContent() {
                 ? "border-b-2 border-blue-700 text-blue-700"
                 : "text-slate-500 hover:text-slate-700"
             }`}
-            onClick={() => setActiveTab(key)}
+            onClick={() => {
+              if (activeTab === "loan" && key !== "loan") {
+                setLoanData(null);
+                setLoanError(null);
+              }
+              setActiveTab(key);
+            }}
           >
             {label}
           </button>
@@ -207,6 +217,13 @@ function ResultPageContent() {
                 marketJeonsePrice={marketData.marketJeonsePrice ?? null}
                 listedJeonsePrice={listedJeonsePrice}
                 confidence={marketData.marketDataConfidence}
+              />
+              {/* Phase D: 최근 실거래 테이블 */}
+              <RecentTradesTable trades={marketData.recentTrades ?? []} />
+              {/* Phase E: 매물 위치 지도 */}
+              <PropertyMap
+                address={address}
+                recentTrades={marketData.recentTrades ?? []}
               />
               {marketData.warnings && marketData.warnings.length > 0 && (
                 <ul className="flex flex-col gap-1 rounded-lg bg-yellow-50 p-3">

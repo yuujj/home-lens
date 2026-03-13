@@ -6,8 +6,16 @@
 
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { type FormEvent } from "react";
 import type { AddressInputData, HousingType } from "@/types";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+
+interface AddressStorage {
+  address: string;
+  housingType: HousingType;
+  exclusiveAreaM2: string;
+  listedJeonsePrice: string;
+}
 
 interface Props {
   /** 폼 제출 시 호출 — API 호출은 상위 컴포넌트(페이지)에서 처리 */
@@ -24,11 +32,28 @@ const HOUSING_TYPE_LABELS: Record<HousingType, string> = {
   offi: "오피스텔",
 };
 
+const DEFAULT_STORAGE: AddressStorage = {
+  address: "",
+  housingType: "apt",
+  exclusiveAreaM2: "",
+  listedJeonsePrice: "",
+};
+
 export default function AddressInput({ onSubmit, isLoading = false }: Props) {
-  const [address, setAddress] = useState("");
-  const [housingType, setHousingType] = useState<HousingType>("apt");
-  const [exclusiveAreaM2, setExclusiveAreaM2] = useState("");
-  const [listedJeonsePrice, setListedJeonsePrice] = useState("");
+  const [stored, setStored] = useLocalStorage<AddressStorage>(
+    "homelens:address",
+    DEFAULT_STORAGE
+  );
+
+  const address = stored.address;
+  const housingType = stored.housingType;
+  const exclusiveAreaM2 = stored.exclusiveAreaM2;
+  const listedJeonsePrice = stored.listedJeonsePrice;
+
+  const setAddress = (v: string) => setStored({ ...stored, address: v });
+  const setHousingType = (v: HousingType) => setStored({ ...stored, housingType: v });
+  const setExclusiveAreaM2 = (v: string) => setStored({ ...stored, exclusiveAreaM2: v });
+  const setListedJeonsePrice = (v: string) => setStored({ ...stored, listedJeonsePrice: v });
 
   /** 폼 유효성 검사 */
   function validate(): string | null {

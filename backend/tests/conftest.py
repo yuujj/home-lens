@@ -1,8 +1,10 @@
 """공통 테스트 픽스처 — 외부 API 미호출 원칙 적용"""
 
 import json
+
 import pytest
 from fastapi.testclient import TestClient
+
 from main import app
 
 FIXTURES_DIR = "tests/fixtures"

@@ -1,17 +1,18 @@
 """시세 분석 단위 테스트 — 외부 API 미호출, fixture 기반"""
 
-import pytest
 from unittest.mock import AsyncMock
+
+import pytest
+
 from clients import rtms_client
+from clients.rtms_client import parse_rtms_price
+from models.schemas import Address
 from services import market_service
 from services.market_service import (
     calc_jeonse_ratio,
-    grade_jeonse_ratio,
     filter_similar_area,
-    determine_market_price,
+    grade_jeonse_ratio,
 )
-from clients.rtms_client import parse_rtms_price
-from models.schemas import Address
 
 # ─── 테스트 1: 전세가율 계산 경계값 ─────────────────────────────────────────
 
@@ -54,15 +55,15 @@ def test_parse_rtms_price():
 def test_filter_similar_area():
     """±10% 면적 필터 + 해제 건 제거"""
     items = [
-        {"전용면적": "84.99"},                          # 타겟과 동일 → 포함
-        {"전용면적": "59.99"},                          # 30% 차이 → 제외
-        {"전용면적": "90.00"},                          # 6% 차이 → 포함
-        {"전용면적": "84.99", "해제여부": "Y"},         # 해제 → 제외
-        {"전용면적": "93.50"},                          # 10.6% 차이 → 제외
+        {"excluUseAr": "84.99"},                        # 타겟과 동일 → 포함
+        {"excluUseAr": "59.99"},                        # 30% 차이 → 제외
+        {"excluUseAr": "90.00"},                        # 6% 차이 → 포함
+        {"excluUseAr": "84.99", "cdealType": "O"},      # 해제 → 제외
+        {"excluUseAr": "93.50"},                        # 10.6% 차이 → 제외
     ]
     result = filter_similar_area(items, 84.99)
     assert len(result) == 2
-    areas = [float(i["전용면적"]) for i in result]
+    areas = [float(i["excluUseAr"]) for i in result]
     assert 84.99 in areas
     assert 90.00 in areas
 

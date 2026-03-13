@@ -1,17 +1,15 @@
 """전세 사기 스코어링 단위 테스트 — Claude API 미호출, fixture 기반"""
+
 import pytest
-from unittest.mock import AsyncMock
-from clients import claude_client
-from services import fraud_service
+
+from models.schemas import Address, PropertyInfo
 from services.fraud_service import (
     calc_jeonse_ratio_score,
     calc_mortgage_ratio_score,
     calc_registry_keyword_score,
-    calc_landlord_score,
-    grade_fraud_score,
     calculate_fraud_score,
+    grade_fraud_score,
 )
-from models.schemas import PropertyInfo, Address
 
 
 # 테스트용 PropertyInfo fixture
@@ -73,7 +71,11 @@ def test_calc_mortgage_ratio_score():
 # ─── 테스트 3: 등기 키워드 점수 조합 ──────────────────────────────────────────
 def test_calc_registry_keyword_score():
     # 위험 키워드 없음 → 0점
-    clean = {k: False for k in ["has_attachment","has_provisional_attachment","has_auction","has_trust","has_lease_registration","has_seizure","has_provisional_registration"]}
+    keys = [
+        "has_attachment", "has_provisional_attachment", "has_auction",
+        "has_trust", "has_lease_registration", "has_seizure", "has_provisional_registration",
+    ]
+    clean = {k: False for k in keys}
     score, flags = calc_registry_keyword_score(clean)
     assert score == 0
     assert len(flags) == 0

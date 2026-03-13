@@ -2,9 +2,10 @@
 
 from fastapi import APIRouter
 from pydantic import BaseModel
+
 from clients import juso_client
-from services import market_service
 from models.schemas import Address, ApiResponse
+from services import market_service
 
 router = APIRouter()
 

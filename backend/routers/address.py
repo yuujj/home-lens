@@ -2,6 +2,7 @@
 
 from fastapi import APIRouter
 from pydantic import BaseModel
+
 from clients import juso_client
 from models.schemas import Address, ApiResponse
 
