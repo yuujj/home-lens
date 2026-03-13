@@ -1,0 +1,20 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 백엔드 배포 확인 (Railway 자동 배포)
+        run: echo "Railway GitHub 연동으로 자동 배포 트리거됨"
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 프론트엔드 배포 확인 (Vercel 자동 배포)
+        run: echo "Vercel GitHub 연동으로 자동 배포 트리거됨"
