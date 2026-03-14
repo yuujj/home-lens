@@ -94,6 +94,32 @@ types/          ← TypeScript 타입 정의
 | API 엔드포인트 | kebab-case | `/api/fraud-score`, `/api/loan-eligible` |
 | Pydantic 모델 | PascalCase | `PropertyInfo`, `AnalysisResult` |
 
+### 프론트-백엔드 직렬화 규칙
+
+백엔드(Python)는 snake_case, 프론트(TypeScript)는 camelCase를 사용하므로 **경계에서 반드시 변환**해야 한다.
+
+| 방향 | 변환 책임 | 위치 |
+|------|-----------|------|
+| 프론트 → 백엔드 (요청) | 프론트가 camelCase → snake_case 변환 | `frontend/src/lib/api.ts` 각 API 함수 내부 |
+| 백엔드 → 프론트 (응답) | 백엔드가 `camelize()` 적용하거나, 프론트가 변환 | 백엔드에서 `camelize()` 미적용 시 `api.ts`에서 변환 |
+
+**규칙**
+- `lib/api.ts`의 각 함수는 백엔드로 보내기 전에 JSON body를 snake_case로 직접 매핑한다.
+- 백엔드 응답에 `camelize()`가 적용된 엔드포인트는 프론트 변환 불필요 (현재: `/api/fraud/score`, `/api/registry/parse`).
+- `camelize()` 미적용 엔드포인트는 `api.ts`에서 응답을 camelCase로 변환 후 반환한다 (현재: `/api/loan/eligible`).
+- `types/index.ts`의 TypeScript 인터페이스는 항상 camelCase로 정의한다. snake_case 필드를 직접 노출하지 않는다.
+
+```typescript
+// ✅ 올바른 예 — api.ts에서 변환
+const body = {
+  annual_income: profile.annualIncome,  // camelCase → snake_case
+  housing_type: profile.housingType,
+};
+
+// ❌ 잘못된 예 — 변환 없이 그대로 전송
+body: JSON.stringify(profile)  // annualIncome이 그대로 전송 → 422 에러
+```
+
 ### Import 순서 (Python)
 ```python
 # 1. 표준 라이브러리
