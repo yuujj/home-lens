@@ -2,9 +2,12 @@
 # [API 기준] anthropic SDK, claude-sonnet-4-6 모델, tool_use 방식
 # AsyncAnthropic 사용 — FastAPI async 이벤트 루프와 충돌 방지
 """
+import logging
 import anthropic
 
 from core.config import settings
+
+logger = logging.getLogger(__name__)
 
 _client = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
 
@@ -80,6 +83,6 @@ async def parse_registry_text(registry_text: str) -> dict:
                 result = dict(_DEFAULT_REGISTRY)
                 result.update(block.input)
                 return result
-    except Exception:
-        pass
+    except Exception as e:
+        logger.error("Claude API 호출 실패: %s: %s", type(e).__name__, e)
     return dict(_DEFAULT_REGISTRY)
