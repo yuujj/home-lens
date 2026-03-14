@@ -182,11 +182,47 @@ export async function parseRegistry(
 export async function scoreFraud(
   data: FraudScoreRequest
 ): Promise<FraudScoreResponse> {
+  const p = data.property_info;
+
+  // 백엔드 snake_case 변환 (응답은 백엔드 camelize()로 이미 camelCase)
+  const body = {
+    registry_text: data.registry_text,
+    property_info: {
+      address: {
+        raw_input: p.address.rawInput,
+        road_addr: p.address.roadAddr,
+        jibun_addr: p.address.jibunAddr,
+        lawd_cd_5: p.address.lawdCd5,
+        lawd_cd_10: p.address.lawdCd10,
+        sido: p.address.sido,
+        sigungu: p.address.sigungu,
+        dong: p.address.dong,
+        is_metropolitan: p.address.isMetropolitan,
+        regulation_zone: p.address.regulationZone,
+      },
+      housing_type: p.housingType,
+      exclusive_area_m2: p.exclusiveAreaM2,
+      floor: p.floor,
+      built_year: p.builtYear,
+      listed_jeonse_price: p.listedJeonsePrice,
+      listed_trade_price: p.listedTradePrice,
+      market_trade_price: p.marketTradePrice,
+      market_jeonse_price: p.marketJeonsePrice,
+      market_data_confidence: p.marketDataConfidence,
+      senior_mortgage_amount: p.seniorMortgageAmount,
+      has_attachment: p.hasAttachment,
+      has_provisional_attachment: p.hasProvisionalAttachment,
+      has_auction: p.hasAuction,
+      has_trust: p.hasTrust,
+      has_lease_registration: p.hasLeaseRegistration,
+    },
+  };
+
   const result = await apiFetch<ApiResponse<FraudScoreResponse>>(
     "/api/fraud/score",
     {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify(body),
     }
   );
   if (!result.success || !result.data)
