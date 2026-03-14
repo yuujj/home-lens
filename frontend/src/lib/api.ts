@@ -250,7 +250,7 @@ export async function getEligibleLoans(data: {
     },
   };
 
-  const result = await apiFetch<ApiResponse<LoanEligibleResponse>>(
+  const result = await apiFetch<ApiResponse<Record<string, unknown>>>(
     "/api/loan/eligible",
     {
       method: "POST",
@@ -259,5 +259,23 @@ export async function getEligibleLoans(data: {
   );
   if (!result.success || !result.data)
     throw new Error(result.error ?? "대출 조회 실패");
-  return result.data;
+
+  // 백엔드 snake_case 응답 → 프론트 camelCase 변환
+  const raw = result.data as Record<string, unknown[]>;
+  return {
+    eligible: ((raw.eligible as Record<string, unknown>[]) ?? []).map((l) => ({
+      productName: l.product_name as string,
+      maxLimit: l.max_limit as number,
+      rateMin: l.rate_min as number,
+      rateMax: l.rate_max as number,
+      rateWithBenefit: l.rate_with_benefit as number,
+      ltv: l.ltv as number,
+      monthlyPaymentEstimate: l.monthly_payment_estimate as number | undefined,
+      notes: (l.notes as string[]) ?? [],
+    })),
+    ineligible: ((raw.ineligible as Record<string, unknown>[]) ?? []).map((l) => ({
+      productName: l.product_name as string,
+      reason: l.reason as string,
+    })),
+  };
 }
