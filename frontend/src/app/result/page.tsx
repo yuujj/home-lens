@@ -136,6 +136,13 @@ function ResultPageContent() {
     setLoanError(null);
     setLoanData(null);
 
+    // 전세 목적인데 보증금 정보가 없으면 경고
+    if (profile.loanPurpose === "jeonse" && !listedJeonsePrice && !marketData?.marketJeonsePrice) {
+      setLoanError("전세보증금 정보를 확인할 수 없습니다. 처음 화면으로 돌아가 전세보증금을 입력해 주세요.");
+      setIsLoanLoading(false);
+      return;
+    }
+
     getEligibleLoans({
       user_profile: profile,
       property_info: {

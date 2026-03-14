@@ -3,7 +3,11 @@
 # 최신 기준: nhuf.molit.go.kr
 """
 
+import logging
+
 from models.schemas import PropertyInfo, UserProfile
+
+logger = logging.getLogger(__name__)
 
 # 정책 대출 상품 테이블 (하드코딩 — 외부 API 불필요)
 PRODUCTS = {
@@ -277,6 +281,16 @@ async def get_eligible_loans(
         or 0
     )
 
+    if price == 0:
+        logger.warning(
+            "대출 한도 계산 불가 — 보증금/매매가 미입력 "
+            "(listed_jeonse=%s, market_jeonse=%s, listed_trade=%s, market_trade=%s)",
+            property_info.listed_jeonse_price,
+            property_info.market_jeonse_price,
+            property_info.listed_trade_price,
+            property_info.market_trade_price,
+        )
+
     for key, product in PRODUCTS.items():
         if check_eligibility(key, product, user, property_info):
             base_rate = calc_base_rate(product, user.annual_income * 10000)
@@ -284,6 +298,9 @@ async def get_eligible_loans(
             final_rate = max(round(base_rate - benefit, 2), 1.0)
             limit = calc_loan_limit(product, price)
             monthly = calc_monthly_payment(limit, final_rate, 20)
+            notes = list(product["주의사항"])
+            if limit == 0:
+                notes = ["⚠️ 보증금(매매가) 정보 없음 — 한도 계산 불가"] + notes
             eligible.append({
                 "product_name": product["상품명"],
                 "max_limit": limit,
@@ -292,7 +309,7 @@ async def get_eligible_loans(
                 "rate_with_benefit": final_rate,
                 "ltv": product["LTV"],
                 "monthly_payment_estimate": monthly,
-                "notes": product["주의사항"],
+                "notes": notes,
             })
         else:
             ineligible.append({
