@@ -1,11 +1,12 @@
 """Anthropic Claude API 클라이언트 — 등기부등본 텍스트 파싱 전용
 # [API 기준] anthropic SDK, claude-sonnet-4-6 모델, tool_use 방식
+# AsyncAnthropic 사용 — FastAPI async 이벤트 루프와 충돌 방지
 """
 import anthropic
 
 from core.config import settings
 
-_client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+_client = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
 
 REGISTRY_PARSE_TOOL = {
     "name": "parse_registry",
@@ -59,7 +60,7 @@ async def parse_registry_text(registry_text: str) -> dict:
     # 토큰 절약을 위해 최대 8000자로 자름
     truncated = registry_text[:8000]
     try:
-        response = _client.messages.create(
+        response = await _client.messages.create(
             model=settings.CLAUDE_MODEL,
             max_tokens=1024,
             tools=[REGISTRY_PARSE_TOOL],
