@@ -204,11 +204,57 @@ export async function getEligibleLoans(data: {
   user_profile: UserProfileInput;
   property_info: Record<string, unknown>;
 }): Promise<LoanEligibleResponse> {
+  const u = data.user_profile;
+  const p = data.property_info;
+
+  // 백엔드 snake_case 변환 + 필수 address 기본값 삽입
+  const body = {
+    user_profile: {
+      annual_income: u.annualIncome,
+      is_dual_income: u.isDualIncome,
+      net_asset: u.netAsset,
+      age: u.age,
+      is_married: u.isMarried,
+      marriage_years: u.marriageYears,
+      num_children: u.numChildren,
+      has_newborn_2yr: u.hasNewborn2yr,
+      housing_ownership: u.housingOwnership,
+      is_disabled: u.isDisabled,
+      is_single_parent: u.isSingleParent,
+      is_multicultural: u.isMulticultural,
+      subscription_years: u.subscriptionYears,
+      subscription_count: u.subscriptionCount,
+      loan_purpose: u.loanPurpose,
+    },
+    property_info: {
+      address: {
+        raw_input: "",
+        road_addr: "",
+        jibun_addr: "",
+        lawd_cd_5: "",
+        lawd_cd_10: "",
+        sido: "",
+        sigungu: "",
+        dong: "",
+        is_metropolitan: false,
+        regulation_zone: "일반",
+      },
+      housing_type: p.housingType,
+      exclusive_area_m2: p.exclusiveAreaM2,
+      listed_jeonse_price: p.listedJeonsePrice ?? null,
+      listed_trade_price: p.listedTradePrice ?? null,
+      market_trade_price: p.marketTradePrice ?? null,
+      market_jeonse_price: p.marketJeonsePrice ?? null,
+      market_data_confidence: p.marketDataConfidence ?? "none",
+      senior_mortgage_amount: p.seniorMortgageAmount ?? 0,
+    },
+  };
+
   const result = await apiFetch<ApiResponse<LoanEligibleResponse>>(
     "/api/loan/eligible",
     {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify(body),
     }
   );
   if (!result.success || !result.data)
