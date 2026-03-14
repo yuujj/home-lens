@@ -266,10 +266,15 @@ async def get_eligible_loans(
     """
     eligible = []
     ineligible = []
+    # 사용자 입력 보증금 → 시세 보증금 → 0 순서로 fallback
     price = (
-        property_info.listed_jeonse_price or 0
+        property_info.listed_jeonse_price
+        or property_info.market_jeonse_price
+        or 0
         if user.loan_purpose == "jeonse"
-        else property_info.listed_trade_price or 0
+        else property_info.listed_trade_price
+        or property_info.market_trade_price
+        or 0
     )
 
     for key, product in PRODUCTS.items():
