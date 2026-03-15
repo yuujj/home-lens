@@ -5,9 +5,18 @@ import json
 import pytest
 from fastapi.testclient import TestClient
 
+from core.cache import cache
 from main import app
 
 FIXTURES_DIR = "tests/fixtures"
+
+
+@pytest.fixture(autouse=True)
+def clear_market_cache():
+    """각 테스트 전후 인메모리 캐시 초기화 — 캐시 히트로 인한 mock 미호출 방지"""
+    cache._store.clear()
+    yield
+    cache._store.clear()
 
 
 @pytest.fixture
