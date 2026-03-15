@@ -23,6 +23,7 @@ const DEFAULT: UserProfileInput = {
   subscriptionYears: 0,
   subscriptionCount: 0,
   loanPurpose: "jeonse",
+  housePrice: 0,
 };
 
 export default function UserProfileForm({ onSubmit, isLoading }: Props) {
@@ -46,6 +47,18 @@ export default function UserProfileForm({ onSubmit, isLoading }: Props) {
             <option value="buy">구입</option>
           </select>
         </label>
+        {form.loanPurpose === "buy" && (
+          <label className="flex flex-col gap-1 text-xs text-slate-600">
+            주택가격 (만원)
+            <input
+              type="number"
+              className="rounded-lg border border-slate-200 p-2 text-sm"
+              value={form.housePrice || ""}
+              onChange={(e) => set("housePrice", Number(e.target.value))}
+              placeholder="예: 40000"
+            />
+          </label>
+        )}
         <label className="flex flex-col gap-1 text-xs text-slate-600">
           연소득 (만원, 세전)
           <input
