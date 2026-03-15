@@ -1,6 +1,8 @@
 name: CI
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [dev, main]
 
@@ -33,7 +35,7 @@ jobs:
       - name: pytest 실행 (외부 API 미호출)
         run: |
           source .venv/bin/activate
-          pytest tests/ -v --cov=services --cov=clients --cov-report=term-missing
+          pytest tests/ -v --cov=services --cov=clients --cov=routers --cov-report=term-missing --cov-fail-under=60
 
   frontend-test:
     runs-on: ubuntu-latest

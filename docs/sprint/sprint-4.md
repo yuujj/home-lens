@@ -296,11 +296,19 @@ npm run lint && npx tsc --noEmit  # → 0 errors ✅
 
 ## 5. Sprint 4 완료 기준 체크리스트
 
-- [ ] 연소득 3500만·만 29세·전세 1.8억 입력 → 청년전용 버팀목 1.44억 한도 출력
-- [ ] 자격 미충족 상품에 불가 사유 표시
-- [ ] `POST /api/analyze/full` — 3기능 통합 결과 반환
-- [ ] `pytest tests/test_calc_loan.py` → 5 passed
-- [ ] services 커버리지 70%↑
-- [ ] 3탭 대시보드 모든 탭 정상 동작
-- [ ] 면책 고지 모든 결과 화면 하단 표시 확인
-- [ ] Sprint 누적 커밋 30개 이상
+- [x] 연소득 3500만·만 29세·전세 1.8억 입력 → 청년전용 버팀목 1.44억 한도 출력
+- [x] 자격 미충족 상품에 불가 사유 표시
+- [x] `POST /api/analyze/full` — 3기능 통합 결과 반환
+- [x] `pytest tests/test_calc_loan.py` → 5 passed
+- [x] services 커버리지 70%↑
+- [x] 3탭 대시보드 모든 탭 정상 동작
+- [x] 면책 고지 모든 결과 화면 하단 표시 확인
+- [x] Sprint 누적 커밋 30개 이상
+
+## 6. 발생 이슈 및 해결
+
+| 이슈 | 원인 | 해결 |
+|------|------|------|
+| `loan_products.py` PRODUCTS 중복 | loan_service.py와 loan_products.py에 동일 테이블 존재 | loan_service.py에서 loan_products.py를 import하도록 리팩토링 (관심사 분리) |
+| `check_eligibility` 소득 단위 불일치 | UserProfile.annual_income이 만원 단위인데 상품 테이블은 원 단위 | `user.annual_income * 10000`으로 단위 변환 후 비교하도록 수정 |
+| `AnalysisDashboard` UserProfile 폼 연동 | 탭3(정책대출) 입력이 POST /api/loan/eligible에 연결되지 않음 | UserProfileForm → useAnalysisStore → API 호출 흐름 구성 |

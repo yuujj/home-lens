@@ -60,13 +60,25 @@ copy .env.example .env.local
 npm run dev
 ```
 
-### 필수 환경변수
+### 환경변수 설정
+
+`backend/.env.example`과 `frontend/.env.example`을 복사하여 사용합니다.
+
+**백엔드 필수 변수**
+
+| 변수 | 설명 | 발급처 |
+|------|------|--------|
+| `ANTHROPIC_API_KEY` | Claude AI API 키 (등기부 분석) | [console.anthropic.com](https://console.anthropic.com/) |
+| `DATA_GO_KR_API_KEY` | 공공데이터포털 인증키 (RTMS 실거래가) | [data.go.kr](https://www.data.go.kr/) |
+| `JUSO_API_KEY` | 도로명주소 API 인증키 | [juso.go.kr](https://www.juso.go.kr/) |
+
+**프론트엔드 필수 변수**
 
 | 변수 | 설명 |
 |------|------|
-| `ANTHROPIC_API_KEY` | Claude AI API 키 (등기부 분석) |
-| `DATA_GO_KR_API_KEY` | 공공데이터포털 인증키 (RTMS 실거래가) |
-| `JUSO_API_KEY` | 도로명주소 API 인증키 (juso.go.kr) |
+| `NEXT_PUBLIC_BACKEND_URL` | 백엔드 API URL (로컬: `http://localhost:8000`) |
+
+> 선택 변수 및 서비스 설정은 각 `.env.example` 파일의 주석을 참고하세요.
 
 ## 기술 스택
 
