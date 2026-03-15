@@ -143,13 +143,21 @@ function ResultPageContent() {
       return;
     }
 
+    // 구입 목적인데 주택가격 정보가 없으면 경고
+    if (profile.loanPurpose === "buy" && !profile.housePrice && !marketData?.marketTradePrice) {
+      setLoanError("주택가격을 입력해 주세요.");
+      setIsLoanLoading(false);
+      return;
+    }
+
+
     getEligibleLoans({
       user_profile: profile,
       property_info: {
         housingType,
         exclusiveAreaM2,
         listedJeonsePrice: listedJeonsePrice || null,
-        listedTradePrice: marketData?.marketTradePrice ?? null,
+        listedTradePrice: (profile.loanPurpose === "buy" && profile.housePrice) ? profile.housePrice : (marketData?.marketTradePrice ?? null),
         marketTradePrice: marketData?.marketTradePrice ?? null,
         marketJeonsePrice: marketData?.marketJeonsePrice ?? null,
         marketDataConfidence: marketData?.marketDataConfidence ?? "none",

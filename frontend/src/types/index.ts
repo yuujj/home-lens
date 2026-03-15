@@ -242,6 +242,8 @@ export interface UserProfileInput {
   subscriptionYears: number;
   subscriptionCount: number;
   loanPurpose: LoanPurpose;
+  /** 구입 목적 주택가격 (만원) — loanPurpose="buy" 시 사용 */
+  housePrice?: number;
 }
 
 /** 체크리스트 항목 */
