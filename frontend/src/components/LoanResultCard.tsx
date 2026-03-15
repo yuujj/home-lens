@@ -6,6 +6,7 @@ interface Props {
 }
 
 function formatManwon(value: number): string {
+  if (value <= 0) return "—";
   if (value >= 10000) return `${(value / 10000).toFixed(1)}억`;
   return `${value.toLocaleString()}만원`;
 }
