@@ -272,7 +272,7 @@ export async function getEligibleLoans(data: {
         sido: "",
         sigungu: "",
         dong: "",
-        is_metropolitan: false,
+        is_metropolitan: (p.isMetropolitan as boolean) ?? false,
         regulation_zone: "일반",
       },
       housing_type: p.housingType,

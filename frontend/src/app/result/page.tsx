@@ -70,6 +70,8 @@ function ResultPageContent() {
     | "offi";
   const exclusiveAreaM2 = parseFloat(params.get("exclusiveAreaM2") ?? "0");
   const listedJeonsePrice = parseInt(params.get("listedJeonsePrice") ?? "0", 10);
+  // 수도권 여부 — 주소 문자열에 서울/경기/인천 포함 시 true
+  const isMetropolitan = /서울|경기|인천/.test(address);
 
   // 탭1 시세 분석 — 페이지 마운트 시 자동 실행
   useEffect(() => {
@@ -160,6 +162,7 @@ function ResultPageContent() {
         listedTradePrice: (profile.loanPurpose === "buy" && profile.housePrice) ? profile.housePrice : (marketData?.marketTradePrice ?? null),
         marketTradePrice: marketData?.marketTradePrice ?? null,
         marketJeonsePrice: marketData?.marketJeonsePrice ?? null,
+        isMetropolitan,
         marketDataConfidence: marketData?.marketDataConfidence ?? "none",
         // Phase C: 사기 위험도 탭에서 파싱된 선순위 근저당 금액 연동
         seniorMortgageAmount: fraudData?.seniorMortgageAmount ?? 0,
